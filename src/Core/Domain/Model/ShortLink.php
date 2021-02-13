@@ -4,12 +4,13 @@ namespace App\Core\Domain\Model;
 
 use App\Infrastructure\Persistence\Doctrine\Repository\ShortLinkRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=ShortLinkRepository::class)
  * @ORM\Table("short_links")
  */
-class ShortLink
+final class ShortLink implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -62,5 +63,14 @@ class ShortLink
         $this->url = $url;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'alias' => $this->alias,
+            'url' => $this->url,
+        ];
     }
 }

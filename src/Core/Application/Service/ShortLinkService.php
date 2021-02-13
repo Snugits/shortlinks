@@ -2,10 +2,11 @@
 
 namespace App\Core\Application\Service;
 
+use App\Core\Domain\Model\ShortLink;
 use App\Core\Domain\Repository\ShorLinkRepository;
 use App\Core\Domain\Service\LinkGenerator;
 
-class ShortLinkService
+final class ShortLinkService
 {
     public function __construct(private LinkGenerator $linkGenerator, private ShorLinkRepository $shorLinkRepository)
     {
@@ -22,5 +23,15 @@ class ShortLinkService
         $this->shorLinkRepository->save($shortLink);
 
         return $shortLink->getAlias();
+    }
+
+    public function get(int $shortLinkId): ?ShortLink
+    {
+        return $this->shorLinkRepository->findOneBy(['id' => $shortLinkId]);
+    }
+
+    public function remove(ShortLink $shortLink): void
+    {
+        $this->shorLinkRepository->remove($shortLink);
     }
 }

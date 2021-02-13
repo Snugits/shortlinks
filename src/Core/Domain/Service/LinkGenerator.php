@@ -6,7 +6,7 @@ use App\Core\Domain\Exception\ShortLinkException;
 use App\Core\Domain\Model\ShortLink;
 use App\Core\Domain\Repository\ShorLinkRepository;
 
-class LinkGenerator
+final class LinkGenerator
 {
     private const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
     private const STRING_MAX_SIZE = 5;

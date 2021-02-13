@@ -7,6 +7,7 @@ use App\Core\Domain\Exception\ShortLinkException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -23,11 +24,11 @@ class ShortLinkController extends AbstractController
     ) {
     }
 
-    #[Route('', name: 'short_link_create', methods: ['POST'])]
+    #[Route('', methods: ['POST'])]
     public function index(
         Request $request
     ): Response {
-        $errors = $this->validator->validate($foo, new Assert\Collection(['url' => new Assert\Url()]));
+        $errors = $this->validator->validate($request->toArray(), new Assert\Collection(['url' => new Assert\Url()]));
         if ($errors->count() > 0) {
             $error = $errors->get(0);
             return $this->json(
@@ -41,7 +42,7 @@ class ShortLinkController extends AbstractController
             return $this->json([
                 'link' => $this->generateUrl(
                     'main',
-                    ['alias' => $this->shortLinkService->create('foo')],
+                    ['alias' => $this->shortLinkService->create($request->toArray()['url'])],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 ),
             ]);
@@ -55,5 +56,33 @@ class ShortLinkController extends AbstractController
 
             return $this->json(['error' => "Can't generate new link"], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function getShortLink(Request $request): Response
+    {
+        $shortLinkId = $request->get('id');
+        $shortLink = $this->shortLinkService->get($shortLinkId);
+
+        if ($shortLink === null) {
+            throw new NotFoundHttpException("Link with id: $shortLinkId is not found");
+        }
+
+        return $this->json($shortLink);
+    }
+
+    #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    public function remove(Request $request): Response
+    {
+        $shortLinkId = $request->get('id');
+        $shortLink = $this->shortLinkService->get($shortLinkId);
+
+        if ($shortLink === null) {
+            throw new NotFoundHttpException("Link with id: $shortLinkId is not found");
+        }
+
+        $this->shortLinkService->remove($shortLink);
+
+        return new Response();
     }
 }

@@ -35,4 +35,10 @@ class ShortLinkRepository extends ServiceEntityRepository implements ShorLinkRep
         $this->_em->persist($shortLink);
         $this->_em->flush();
     }
+
+    public function remove(ShortLink $shortLink): void
+    {
+        $this->_em->remove($shortLink);
+        $this->_em->flush();
+    }
 }
