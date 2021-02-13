@@ -1,3 +1,6 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+main:
+    path: /{alias}
+    controller: \App\Presentation\Web\Controller\RedirectController::index
+    methods: ['GET']
+    requirements:
+        alias: '[a-zA-Z]+'

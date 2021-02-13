@@ -22,7 +22,7 @@ final class Version20210213141946 extends AbstractMigration
         $this->addSql('create table short_links (
                         id int auto_increment
                         primary key,
-                        alias    varchar(255) CHARACTER SET utf8 COLLATE utf8_bin not null,
+                        alias    varchar(5) CHARACTER SET utf8 COLLATE utf8_bin not null,
                         url      varchar(255) not null,
                         constraint UNIQ_5187011D3EE4B093
                         unique (alias)
