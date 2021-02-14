@@ -34,4 +34,9 @@ final class ShortLinkService
     {
         $this->shorLinkRepository->remove($shortLink);
     }
+
+    public function getByAlias(string $alias): ?ShortLink
+    {
+        return $this->shorLinkRepository->findOneBy(['alias' => $alias]);
+    }
 }

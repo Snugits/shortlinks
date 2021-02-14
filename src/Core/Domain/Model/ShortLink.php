@@ -46,23 +46,9 @@ final class ShortLink implements JsonSerializable
         return $this->alias;
     }
 
-    public function setAlias(string $alias): self
-    {
-        $this->alias = $alias;
-
-        return $this;
-    }
-
-    public function getUrl(): ?string
+    public function getUrl(): string
     {
         return $this->url;
-    }
-
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
     }
 
     public function jsonSerialize()
