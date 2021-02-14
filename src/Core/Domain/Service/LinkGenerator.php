@@ -34,7 +34,7 @@ final class LinkGenerator
             $alias = $this->generateRandomString();
             $isFindSimilar = $this->shorLinkRepository->getShortLinksCountByAlias($alias) > 0;
             $counter++;
-        } while ($isFindSimilar > 0 || $counter < self::GENERATE_LIMIT);
+        } while ($isFindSimilar > 0 && $counter < self::GENERATE_LIMIT);
 
         if ($isFindSimilar && $counter >= self::GENERATE_LIMIT) {
             throw new ShortLinkException("Can't generate unique alias");
