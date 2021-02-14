@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
+use Swagger\Annotations as SWG;
 
 #[Route('/shortlink')]
 class ShortLinkController extends AbstractController
@@ -24,6 +25,28 @@ class ShortLinkController extends AbstractController
     ) {
     }
 
+    /**
+     * @SWG\Response(
+     *     response=200,
+     *     description="Creates unique short link for provided url",
+     *     examples={
+     *          "application/json": {
+     *              "link": "http://localhost/AJaKJ"
+     *           }
+     *     }
+     * )
+     * @SWG\Parameter(
+     *     in="body",
+     *     description="The URL that should being shortcutted",
+     *     required=true,
+     *     type="string",
+     *     name="url",
+     *     schema=@SWG\Schema(
+     *          type="string",
+     *          default="{url:'https://google.com'}",
+     *     )
+     * )
+     */
     #[Route('', methods: ['POST'])]
     public function index(
         Request $request
@@ -58,9 +81,21 @@ class ShortLinkController extends AbstractController
         }
     }
 
+    /**
+     * @SWG\Response(
+     *     response=200,
+     *     description="Retriev info about Short URL by id",
+     *     examples={
+     *          "application/json": {
+     *              "id": "1"
+     *           }
+     *     }
+     * )
+     */
     #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function getShortLink(Request $request): Response
-    {
+    public function getShortLink(
+        Request $request
+    ): Response {
         $shortLinkId = $request->get('id');
         $shortLink = $this->shortLinkService->get($shortLinkId);
 
@@ -71,9 +106,21 @@ class ShortLinkController extends AbstractController
         return $this->json($shortLink);
     }
 
+    /**
+     * @SWG\Response(
+     *     response=200,
+     *     description="Removes Short URL by id",
+     *     examples={
+     *          "application/json": {
+     *              "id": "1"
+     *           }
+     *     }
+     * )
+     */
     #[Route('/{id}', requirements: ['id' => '\d+'], methods: ['DELETE'])]
-    public function remove(Request $request): Response
-    {
+    public function remove(
+        Request $request
+    ): Response {
         $shortLinkId = $request->get('id');
         $shortLink = $this->shortLinkService->get($shortLinkId);
 
